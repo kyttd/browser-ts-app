@@ -1,4 +1,4 @@
-import { Status, Task } from "./Task";
+import { Status, Task, TaskObject } from "./Task";
 
 const STORAGE_KEY = "TASKS";
 
@@ -44,13 +44,22 @@ export class TaskCollection {
     if (!jsonString) return [];
 
     try {
-      const storedTasks: any[] = JSON.parse(jsonString);
+      const storedTasks = JSON.parse(jsonString);
+
+      assertIsTaskObject(storedTasks);
+
       const tasks = storedTasks.map((task) => new Task(task));
-      console.log(tasks);
+
       return tasks;
     } catch {
       this.storage.removeItem(STORAGE_KEY);
       return [];
     }
+  }
+}
+
+function assertIsTaskObject(value: any): asserts value is TaskObject[] {
+  if (!Array.isArray(value) || !value.every((item) => Task.validate(item))) {
+    throw new Error("引数「value」はTaskObject[]型と一致しません。");
   }
 }

@@ -7,6 +7,12 @@ export const statusMap = {
 } as const;
 export type Status = typeof statusMap[keyof typeof statusMap];
 
+export type TaskObject = {
+  id: string;
+  title: string;
+  status: Status;
+};
+
 export class Task {
   readonly id;
   title;
