@@ -87,7 +87,19 @@ class Application {
     task.update({ status: newStatus });
     this.taskColleciotn.update(task);
 
-    console.log(sibling);
+    if (sibling) {
+      const nextTaskId = this.taskRenderer.getId(sibling);
+
+      if (!nextTaskId) return;
+
+      const nextTask = this.taskColleciotn.find(nextTaskId);
+
+      if (!nextTask) return;
+
+      this.taskColleciotn.moveAboveTarget(task, nextTask);
+    } else {
+      this.taskColleciotn.moveToLast(task);
+    }
   };
 
   private handleClickDeleteAllDoneTasks = () => {

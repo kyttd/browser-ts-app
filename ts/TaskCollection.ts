@@ -4,7 +4,7 @@ const STORAGE_KEY = "TASKS";
 
 export class TaskCollection {
   private readonly storage: Storage;
-  private tasks;
+  private tasks: Task[];
 
   constructor() {
     this.storage = localStorage;
@@ -55,6 +55,29 @@ export class TaskCollection {
       this.storage.removeItem(STORAGE_KEY);
       return [];
     }
+  }
+
+  moveAboveTarget(task: Task, target: Task) {
+    const taskIndex = this.tasks.indexOf(task);
+    const targetIndex = this.tasks.indexOf(target);
+
+    this.changeOrder(
+      task,
+      taskIndex,
+      taskIndex < targetIndex ? targetIndex - 1 : targetIndex
+    );
+  }
+
+  moveToLast(task: Task) {
+    const taskIndex = this.tasks.indexOf(task);
+
+    this.changeOrder(task, taskIndex, this.tasks.length);
+  }
+
+  private changeOrder(task: Task, taskIndex: number, targetIndex: number) {
+    this.tasks.splice(taskIndex, 1);
+    this.tasks.splice(targetIndex, 0, task);
+    this.updateStorage();
   }
 }
 
